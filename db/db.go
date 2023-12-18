@@ -50,6 +50,11 @@ func createTables() {
 	// if err != nil {
 	// 	panic("could not drop events table")
 	// }
+	// dropUsersTable := `DROP TABLE IF EXISTS users`
+	// _, err = DB.Exec(dropUsersTable)
+	// if err != nil {
+	// 	panic("could not drop users table")
+	// }
 	createUsersTable := `
 	CREATE TABLE IF NOT EXISTS users (
 		id SERIAL PRIMARY KEY,
@@ -76,6 +81,21 @@ func createTables() {
 	_, err = DB.Exec(createEventsTable)
 	if err != nil {
 		panic("could not create events table")
+	}
+
+	createRegistrationsTable := `
+	CREATE TABLE IF NOT EXISTS registrations (
+		id SERIAL PRIMARY KEY,
+		event_id INTEGER,
+		user_id INTEGER,
+		FOREIGN KEY (event_id) REFERENCES events(id),
+		FOREIGN KEY (user_id) REFERENCES users(id)
+	)
+	`
+
+	_, err = DB.Exec(createRegistrationsTable)
+	if err != nil {
+		panic("Could not create registrations table")
 	}
 
 }
