@@ -31,13 +31,15 @@ func getEvent(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, event)
 }
 func createEvent(ctx *gin.Context) {
+
 	var event models.Event
 	if err := ctx.ShouldBindJSON(&event); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Could not parse request data."})
 		return
 	}
-	event.ID = 1
-	event.UserID = 1
+
+	userId := ctx.GetInt64("userId")
+	event.UserID = userId
 	if err := event.Save(); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Could not create event. Try again later."})
 		return
